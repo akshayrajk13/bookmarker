@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h1 class="display-6"><%= title %></h1>
+    <div>
+      <a href="/users/viewbookmarks" class="btn btn-primary">View Bookmarks</a>
+      <a href="/users/search" class="btn btn-secondary">Search Bookmarks</a>
+    </div>
+    <p class="lead">
+      Welcome to your <i>Bookmarked</i> Dashboard, <strong><%= name %></strong>!
+    </p>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Add a New Bookmark</h5>
+      <form action="/users/addbookmark" method="post">
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="url" class="form-label">URL</label>
+          <input type="url" name="url" id="url" class="form-control" required />
+        </div>
+        <div class="d-grid">
+          <button
+            type="submit"
+            name="bookmarksubmit"
+            id="bookmarksubmit"
+            class="btn btn-primary"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+
+      <% if (errors && errors.length > 0) { %>
+      <div class="alert alert-danger mt-3">
+        <ul class="mb-0">
+          <% errors.forEach(function(error) { %>
+          <li><%= error.msg %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %> <% if (message) { %>
+      <div class="alert alert-success mt-3">
+        <ul class="mb-0">
+          <li><%= message %></li>
+        </ul>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>

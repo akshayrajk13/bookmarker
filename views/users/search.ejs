@@ -1,0 +1,97 @@
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h1 class="display-6"><%= title %></h1>
+    <div>
+      <a href="/users/" class="btn btn-primary">Add Bookmarks</a>
+      <a href="/users/search" class="btn btn-secondary">Search Bookmarks</a>
+    </div>
+    <p class="lead">
+      Welcome to your <i>Bookmarked</i> Dashboard, <strong><%= name %></strong>!
+    </p>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form id="searchForm" action="/users/search" method="get">
+        <div class="mb-3">
+          <label for="searchQuery" class="form-label">Search</label>
+          <input
+            type="text"
+            name="searchQuery"
+            id="searchQuery"
+            class="form-control"
+            placeholder="Search by title or URL"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="bookmarkResults" class="mt-4">
+    <% if (bookmarks.length === 0) { %>
+    <p>No bookmarks found.</p>
+    <% } else { %> <% bookmarks.forEach(function(bookmark) { %>
+    <div class="card mb-3">
+      <div class="card-body">
+        <p><strong>Title:</strong> <%= bookmark.title %></p>
+        <p>
+          <strong>URL:</strong>
+          <a href="<%= bookmark.url %>" target="_blank" class="text-primary"
+            ><%= bookmark.url %></a
+          >
+        </p>
+      </div>
+    </div>
+    <% }); %> <% } %>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  document
+    .getElementById("searchForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const query = document.getElementById("searchQuery").value.trim();
+      const resultsDiv = document.getElementById("bookmarkResults");
+
+      if (!query) {
+        resultsDiv.innerHTML = "<p>Please enter a search term.</p>";
+        return;
+      }
+
+      const url = `/users/search?searchQuery=${encodeURIComponent(query)}`;
+      window.history.pushState({}, "", url);
+
+      axios
+        .get(url)
+        .then(function (response) {
+          const { bookmarks } = response.data;
+
+          if (bookmarks.length === 0) {
+            resultsDiv.innerHTML = "<p>No bookmarks found.</p>";
+          } else {
+            let html = "";
+            bookmarks.forEach(function (bookmark) {
+              html += `
+            <div class="card mb-3">
+              <div class="card-body">
+                <p><strong>Title:</strong> ${bookmark.title}</p>
+                <p><strong>URL:</strong> <a href="${bookmark.url}" target="_blank" class="text-primary">${bookmark.url}</a></p>
+              </div>
+            </div>
+          `;
+            });
+            resultsDiv.innerHTML = html;
+          }
+        })
+        .catch(function (error) {
+          console.error("Search error:", error);
+          console.error("Response data:", error.response?.data); // Log response data if available
+          resultsDiv.innerHTML = "<p>An error occurred while searching.</p>";
+        });
+    });
+</script>

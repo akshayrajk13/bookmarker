@@ -1,0 +1,64 @@
+<div class="container mt-5">
+  <div class="text-center mb-4">
+    <h1 class="display-6"><%= title %></h1>
+    <p class="lead">
+      Welcome to your <i>Bookmarked</i> Dashboard, <strong><%= name %></strong>!
+    </p>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Edit Bookmark</h5>
+      <form action="/users/editbookmark/<%= data._id %>" method="post">
+        <div class="mb-3">
+          <label for="titleedit" class="form-label">Title</label>
+          <input
+            type="text"
+            name="titleedit"
+            id="titleedit"
+            class="form-control"
+            value="<%= data.title %>"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="urledit" class="form-label">URL</label>
+          <input
+            type="url"
+            name="urledit"
+            id="urledit"
+            class="form-control"
+            value="<%= data.url %>"
+            required
+          />
+        </div>
+        <div class="d-grid">
+          <button
+            type="submit"
+            name="bookmarkedit"
+            id="bookmarkedit"
+            class="btn btn-primary"
+          >
+            Edit
+          </button>
+        </div>
+      </form>
+
+      <% if (errors && errors.length > 0) { %>
+      <div class="alert alert-danger mt-3">
+        <ul class="mb-0">
+          <% errors.forEach(function(error) { %>
+          <li><%= error.msg %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %> <% if (message) { %>
+      <div class="alert alert-success mt-3">
+        <ul class="mb-0">
+          <li><%= message %></li>
+        </ul>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
